@@ -1,0 +1,12 @@
+{
+  "name": "backend-a",
+  "version": "1.0.0",
+  "description": "CloudPulse Backend Server A (Mac 3, Port 3001)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
