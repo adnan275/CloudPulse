@@ -10,7 +10,7 @@ CloudPulse is a high-availability, distributed local network service platform si
 
 ---
 
-## 🎨 Network Architecture Topology (Mermaid Diagram)
+## 🎨 Network Architecture Topology 
 
 ```mermaid
 flowchart TD
@@ -43,7 +43,7 @@ flowchart TD
 
 ---
 
-## ⚡ End-to-End Protocol Flow Sequence (Mermaid Diagram)
+## ⚡ End-to-End Protocol Flow Sequence
 
 ```mermaid
 sequenceDiagram
