@@ -5,7 +5,7 @@
 
 | Team Member Name | Machine Role | Services Managed | Assigned Ports |
 | :--- | :--- | :--- | :--- |
-| **Team Member 1 (Lead)** | Client & Private DNS Server | `dnsmasq`, `dig`, Browser Client | `Port 53 (UDP/TCP)` |
+| **Adnan Rizvi (2401010043)** (Lead) | System Architect & Edge/DNS Lead | `dnsmasq`, `Nginx`, Architecture | `Port 53 & 443` |
 | **Team Member 2** | Edge Proxy & Load Balancer | `Nginx`, TLS SSL Engine | `Port 443 (HTTPS)` |
 | **Team Member 3** | Dual Backend REST Microservices | Node.js Express Apps A & B | `Ports 3001 & 3002` |
 

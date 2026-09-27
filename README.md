@@ -141,7 +141,7 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 
 | Contributor | GitHub Profile | Project Responsibilities |
 | :--- | :--- | :--- |
-| **Adnan Rizvi** | [@adnan275](https://github.com/adnan275) | System Architecture, NGINX Load Balancing & Edge Security |
+| **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | System Architecture, NGINX Load Balancing & Edge Security |
 | **Praanshu Ranjan** | [@praanshuranjan](https://github.com/praanshuranjan) | Backend Microservices (Node.js REST API & Routing) |
 | **Garariya** | [@garariya](https://github.com/garariya) | DNS Infrastructure, Testing & Performance Automation |
 
