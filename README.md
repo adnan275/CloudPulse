@@ -10,7 +10,7 @@ CloudPulse is a high-availability, distributed local network service platform si
 
 ---
 
-## 🎨 Network Architecture Topology 
+## 🎨 Network Architecture Topology (Mermaid Diagram)
 
 ```mermaid
 flowchart TD
@@ -43,7 +43,7 @@ flowchart TD
 
 ---
 
-## ⚡ End-to-End Protocol Flow Sequence
+## ⚡ End-to-End Protocol Flow Sequence (Mermaid Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -100,7 +100,7 @@ sequenceDiagram
 | **Task D** | Edge Proxy & Load Balancer | [`nginx/nginx.conf`](nginx/nginx.conf) |
 | **Task E** | HTTPS / TLS Termination | [`certs/generate_certs.sh`](certs/generate_certs.sh) |
 | **Task F** | HTTP Caching & 304 | [`public/app.js`](public/app.js) (`/api/data`) |
-| **Task G** | Wireshark Protocol Flow | [`docs/VIVA_GUIDE_PHASE1.md`](docs/VIVA_GUIDE_PHASE1.md) |
+| **Task G** | Wireshark Protocol Flow | [`docs/ARCHITECTURE_PHASE1.md`](docs/ARCHITECTURE_PHASE1.md) |
 
 ---
 
@@ -133,4 +133,3 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 ## 📄 Documentation & Reports
 
 - 📘 [Phase 1 Architecture Specifications](docs/ARCHITECTURE_PHASE1.md)
-- 📗 [Viva Presentation Cheat Sheet & Q&A](docs/VIVA_GUIDE_PHASE1.md)
