@@ -14,44 +14,30 @@ CloudPulse is a high-availability, distributed local network service platform si
 
 ```mermaid
 flowchart TD
-    classDef clientNode fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
-    classDef gatewayNode fill:#1e1b4b,stroke:#a855f7,stroke-width:2px,color:#f8fafc
-    classDef backend1Node fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc
-    classDef backend2Node fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#f8fafc
-    classDef subnetBox fill:#020617,stroke:#334155,stroke-width:2px,stroke-dasharray: 5 5,color:#94a3b8
+    classDef client fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff,font-size:15px
+    classDef gateway fill:#1e1b4b,stroke:#8b5cf6,stroke-width:2px,color:#fff,font-size:15px
+    classDef backend1 fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff,font-size:15px
+    classDef backend2 fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff,font-size:15px
 
-    subgraph LAN ["🌐 Private Local Area Network — Subnet: 192.168.1.0/24"]
-        
-        subgraph Host3 ["🖥️ Machine 3: Compute Node B & Testing Client (Aditya Pal)"]
-            Client["💻 Client Suite<br/>• Web Browser Dashboard<br/>• Automated Test Runner (test_phase1.sh)<br/>• Wireshark Packet Capture Engine"]:::clientNode
-            BackendB["⚡ Upstream Microservice B<br/>• Node.js Express (Port 3002)<br/>• Header: X-Backend: Server-B<br/>• Cache Control & ETag Validator"]:::backend2Node
-        end
-
-        subgraph Host1 ["🛡️ Machine 1: Edge Gateway, Security & DNS (Adnan Rizvi - Lead)"]
-            DNS["🌐 Authoritative Private DNS<br/>• dnsmasq Service (Port 53 UDP/TCP)<br/>• Domain Zone: *.team1.test<br/>• A-Record Resolution -> Gateway IP"]:::gatewayNode
-            
-            subgraph EdgeServices ["Edge Reverse Proxy & Security Engine"]
-                TLS["🔒 TLS 1.3 Termination<br/>• Self-Signed Root CA Certificate<br/>• SAN Certificate (*.team1.test)<br/>• Port 443 (HTTPS) / Port 80 (HTTP)"]:::gatewayNode
-                NginxLB["⚖️ Nginx Load Balancer<br/>• Algorithm: Round-Robin<br/>• Upstream Health Checking<br/>• Header Forwarding (X-Forwarded-For)"]:::gatewayNode
-            end
-        end
-
-        subgraph Host2 ["⚡ Machine 2: Compute Node A (Praanshu Ranjan)"]
-            BackendA["⚡ Upstream Microservice A<br/>• Node.js Express (Port 3001)<br/>• Header: X-Backend: Server-A<br/>• REST API Endpoints (/api/status, /api/data)"]:::backend1Node
-        end
-
+    subgraph Host3 ["🖥️ Machine 3: Compute Node B & Client (Aditya Pal)"]
+        Client["💻 Client Machine<br/>(Browser / curl / Test Suite)"]:::client
+        BackendB["⚡ Backend Server B<br/>Port 3002 | X-Backend: Server-B"]:::backend2
     end
 
-    %% Network Connection Flows
-    Client -- "1. UDP:53 DNS Query (app.team1.test)" --> DNS
-    DNS -- "2. Returns Machine 1 IPv4 (192.168.1.50)" --> Client
-    Client -- "3. TCP Handshake + TLS 1.3 Encrypted HTTPS:443" --> TLS
-    TLS --> NginxLB
-    NginxLB -- "4a. Round-Robin Pass (HTTP :3001)" --> BackendA
-    NginxLB -- "4b. Alternate Pass (HTTP :3002)" --> BackendB
-    BackendA -. "5a. 200 OK (X-Backend: Server-A)" .-> NginxLB
-    BackendB -. "5b. 200 OK (X-Backend: Server-B)" .-> NginxLB
-    NginxLB -. "6. Encrypted TLS Payload Response" .-> Client
+    subgraph Host1 ["🛡️ Machine 1: Edge Gateway & DNS (Adnan Rizvi - Lead)"]
+        DNS["🌐 Private DNS Server<br/>(dnsmasq :: Port 53 UDP)"]:::gateway
+        Nginx["🛡️ Nginx Reverse Proxy<br/>TLS 1.3 Termination (Port 443 HTTPS)"]:::gateway
+    end
+
+    subgraph Host2 ["⚡ Machine 2: Compute Node A (Praanshu Ranjan)"]
+        BackendA["⚡ Backend Server A<br/>Port 3001 | X-Backend: Server-A"]:::backend1
+    end
+
+    Client -- "1. DNS Query (app.team1.test)" --> DNS
+    DNS -- "2. Returns Machine 1 IP" --> Client
+    Client -- "3. HTTPS Request (TLS 1.3 / Port 443)" --> Nginx
+    Nginx -- "4. Round-Robin Pass (Port 3001)" --> BackendA
+    Nginx -- "4. Alternate Pass (Port 3002)" --> BackendB
 ```
 
 ---
