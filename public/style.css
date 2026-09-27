@@ -52,19 +52,19 @@ body {
 .brand { display: flex; align-items: center; gap: 14px; }
 
 .logo-icon {
-  font-size: 32px;
+  font-size: 28px;
   color: var(--cyan);
   filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
 }
 
 .brand h1 {
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 700;
   letter-spacing: -0.3px;
 }
 
 .badge-tag {
-  font-size: 16px;
+  font-size: 14px;
   background: rgba(0, 212, 255, 0.1);
   color: var(--cyan);
   border: 1px solid rgba(0, 212, 255, 0.2);
@@ -76,7 +76,7 @@ body {
   font-family: var(--mono);
 }
 
-.subtitle { font-size: 15px; color: var(--muted); margin-top: 2px; }
+.subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
 .status-pill {
   display: flex;
@@ -86,7 +86,7 @@ body {
   border: 1px solid rgba(0, 229, 160, 0.15);
   padding: 7px 16px;
   border-radius: 30px;
-  font-size: 15px;
+  font-size: 13px;
   color: var(--green);
   letter-spacing: 0.5px;
 }
@@ -130,13 +130,13 @@ body {
 
 .chip-label {
   font-family: var(--mono);
-  font-size: 15px;
+  font-size: 13px;
   color: var(--muted);
   letter-spacing: 0.8px;
 }
 
 .chip-val {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -165,14 +165,14 @@ body {
 }
 
 .section-tag {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--muted);
   letter-spacing: 1px;
 }
 
 .live-badge {
   font-family: var(--mono);
-  font-size: 16px;
+  font-size: 14px;
   color: var(--green);
   animation: blink 2s infinite;
 }
@@ -218,18 +218,18 @@ body {
 .node-info { flex: 1; }
 
 .node-title {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--text);
   margin-bottom: 2px;
 }
 
 .port-tag {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .node-status {
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.5px;
 }
 
@@ -240,7 +240,7 @@ body {
   border: 1px solid rgba(0, 212, 255, 0.2);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--mono);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--cyan);
 }
@@ -268,7 +268,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* TERMINAL BOX */
@@ -296,7 +296,7 @@ body {
 
 .terminal-line {
   font-family: var(--mono);
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.5;
   animation: fadeIn 0.2s ease;
 }
@@ -326,21 +326,21 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .kv-key {
   color: var(--muted);
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.5px;
 }
 
-.kv-val { font-size: 15px; font-weight: 600; }
+.kv-val { font-size: 13px; font-weight: 600; }
 
 /* BUTTONS */
 .btn {
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   padding: 8px 14px;
   border-radius: 8px;
@@ -381,7 +381,7 @@ body {
   align-items: center;
   gap: 12px;
   margin-top: 14px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .sep { color: rgba(255,255,255,0.08); }
