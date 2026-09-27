@@ -79,14 +79,14 @@ sequenceDiagram
 
 ---
 
-## 🖥️ Machine Roles & Topology Inventory
+## 🖥️ Logical Node Roles & 3-Machine Deployment
 
-| Machine Role | Services Running | Interface & Listening Ports | Cloud Equivalent |
-| :--- | :--- | :--- | :--- |
-| **Mac 1** (Private DNS) | `dnsmasq`, `dig`, `nslookup` | `0.0.0.0:53 (UDP/TCP)` | AWS Route 53 / Cloudflare DNS |
-| **Mac 2** (Edge Proxy) | `Nginx`, TLS SSL Engine | `0.0.0.0:443 (HTTPS)`, `80` | AWS Application Load Balancer (ALB) |
-| **Mac 3** (Backend A) | Node.js Express REST API | `0.0.0.0:3001 (HTTP)` | Compute Instance / EC2 A |
-| **Mac 4** (Backend B) | Node.js Express REST API | `0.0.0.0:3002 (HTTP)` | Compute Instance / EC2 B |
+| Logical Node | Host / Member | Services Running | Interface & Listening Ports | Cloud Equivalent |
+| :--- | :--- | :--- | :--- | :--- |
+| **Node 1 (Private DNS)** | **Machine 1** (Adnan Rizvi) | `dnsmasq`, `dig`, `nslookup` | `0.0.0.0:53 (UDP/TCP)` | AWS Route 53 / Cloudflare DNS |
+| **Node 2 (Edge Proxy)** | **Machine 1** (Adnan Rizvi) | `Nginx`, TLS 1.3 Termination | `0.0.0.0:443 (HTTPS)`, `80` | AWS Application Load Balancer (ALB) |
+| **Node 3 (Backend A)** | **Machine 2** (Praanshu) | Node.js Express REST API (Server-A) | `0.0.0.0:3001 (HTTP)` | Compute Instance / EC2 A |
+| **Node 4 (Backend B)** | **Machine 3** (Garariya) | Node.js Express REST API (Server-B) | `0.0.0.0:3002 (HTTP)` | Compute Instance / EC2 B |
 
 ---
 
