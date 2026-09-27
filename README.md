@@ -133,7 +133,6 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 ## 📄 Documentation & Reports
 
 - 📘 [Phase 1 Architecture Specifications](docs/ARCHITECTURE_PHASE1.md)
-- 📗 [Viva Defense Guide & Q&A](docs/VIVA_GUIDE_PHASE1.md)
 
 ---
 
