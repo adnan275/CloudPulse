@@ -12,157 +12,138 @@
 <body>
   <div class="app-container">
 
-    <!-- Top Bar -->
+    <!-- Navbar -->
     <header class="navbar">
       <div class="brand">
-        <div class="logo-icon">⬡</div>
+        <span class="logo-icon">⬡</span>
         <div>
           <h1>CloudPulse <span class="badge-tag">NOC v1.0</span></h1>
-          <p class="subtitle mono">Network Operations Center &nbsp;|&nbsp; <span class="cyan">app.team1.test</span> &nbsp;|&nbsp; <span id="clock">--:--:--</span></p>
+          <p class="subtitle"><span class="mono cyan">app.team1.test</span> &nbsp;·&nbsp; Network Operations Center &nbsp;·&nbsp; <span class="mono muted" id="clock">--:--:--</span></p>
         </div>
       </div>
-      <div class="top-right">
-        <div class="status-pill">
-          <span class="status-dot pulsing"></span>
-          <span class="mono" id="connected-node-text">CONNECTING...</span>
-        </div>
+      <div class="status-pill">
+        <span class="status-dot pulsing"></span>
+        <span class="mono" id="connected-node-text">CONNECTING...</span>
       </div>
     </header>
 
-    <!-- Metrics Bar -->
+    <!-- Metrics Strip -->
     <div class="metrics-bar">
       <div class="metric-chip">
         <span class="chip-label">ACTIVE NODE</span>
-        <span class="chip-val mono cyan" id="chip-backend">--</span>
+        <span class="chip-val cyan" id="chip-backend">--</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">PORT</span>
-        <span class="chip-val mono cyan" id="chip-port">:----</span>
+        <span class="chip-val cyan" id="chip-port">:----</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">LATENCY</span>
-        <span class="chip-val mono green" id="chip-latency">-- ms</span>
+        <span class="chip-val green" id="chip-latency">-- ms</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">PROTOCOL</span>
-        <span class="chip-val mono purple">HTTP/1.1</span>
+        <span class="chip-val purple">HTTP/1.1</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">TLS</span>
-        <span class="chip-val mono green">v1.3 ✓</span>
+        <span class="chip-val green">v1.3 ✓</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">LB ALGO</span>
-        <span class="chip-val mono blue">ROUND-ROBIN</span>
+        <span class="chip-val blue">ROUND-ROBIN</span>
       </div>
       <div class="metric-chip">
         <span class="chip-label">REQUESTS</span>
-        <span class="chip-val mono" id="chip-req-count">0</span>
+        <span class="chip-val" id="chip-req-count">0</span>
       </div>
     </div>
 
-    <main class="dashboard-grid">
+    <!-- Main Layout: Left Sidebar + Right Content -->
+    <div class="main-layout">
 
-      <!-- Left: Node Status Panel -->
-      <section class="card node-card">
-        <div class="card-header">
-          <span class="section-tag mono">SYS_NODE_STATUS</span>
-          <span class="live-badge">● LIVE</span>
-        </div>
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="card">
+          <div class="card-header">
+            <span class="section-tag">SYS_NODE_STATUS</span>
+            <span class="live-badge">● LIVE</span>
+          </div>
 
-        <div class="node-block" id="node-a-block">
-          <div class="node-indicator" id="node-a-indicator"></div>
-          <div class="node-info">
-            <div class="node-title mono">Backend-A <span class="port-tag">:3001</span></div>
-            <div class="node-status mono green" id="node-a-status">HEALTHY</div>
+          <div class="node-block">
+            <div class="node-indicator"></div>
+            <div class="node-info">
+              <div class="node-title">Backend-A <span class="muted">:3001</span></div>
+              <div class="node-status green">HEALTHY</div>
+            </div>
+            <div class="node-badge">A</div>
           </div>
-          <div class="node-badge" id="node-a-badge">A</div>
-        </div>
 
-        <div class="divider"></div>
+          <div class="divider"></div>
 
-        <div class="node-block" id="node-b-block">
-          <div class="node-indicator b" id="node-b-indicator"></div>
-          <div class="node-info">
-            <div class="node-title mono">Backend-B <span class="port-tag">:3002</span></div>
-            <div class="node-status mono green" id="node-b-status">HEALTHY</div>
+          <div class="node-block">
+            <div class="node-indicator b"></div>
+            <div class="node-info">
+              <div class="node-title">Backend-B <span class="muted">:3002</span></div>
+              <div class="node-status green">HEALTHY</div>
+            </div>
+            <div class="node-badge b">B</div>
           </div>
-          <div class="node-badge b" id="node-b-badge">B</div>
-        </div>
 
-        <div class="divider"></div>
+          <div class="divider"></div>
 
-        <div class="stack-mini">
-          <div class="stack-row">
-            <span class="mono muted">DNS</span>
-            <span class="mono cyan">UDP :53</span>
-          </div>
-          <div class="stack-row">
-            <span class="mono muted">TLS EDGE</span>
-            <span class="mono cyan">TCP :443</span>
-          </div>
-          <div class="stack-row">
-            <span class="mono muted">UPSTREAM-A</span>
-            <span class="mono blue">TCP :3001</span>
-          </div>
-          <div class="stack-row">
-            <span class="mono muted">UPSTREAM-B</span>
-            <span class="mono green">TCP :3002</span>
-          </div>
-          <div class="stack-row">
-            <span class="mono muted">CACHE-TTL</span>
-            <span class="mono purple">max-age=60</span>
+          <div class="stack-mini">
+            <div class="stack-row"><span class="muted">DNS</span><span class="cyan">UDP :53</span></div>
+            <div class="stack-row"><span class="muted">TLS EDGE</span><span class="cyan">TCP :443</span></div>
+            <div class="stack-row"><span class="muted">UPSTREAM-A</span><span class="blue">TCP :3001</span></div>
+            <div class="stack-row"><span class="muted">UPSTREAM-B</span><span class="green">TCP :3002</span></div>
+            <div class="stack-row"><span class="muted">CACHE TTL</span><span class="purple">max-age=60</span></div>
           </div>
         </div>
-      </section>
+      </aside>
 
-      <!-- Center: Live Request Log -->
-      <section class="card log-card">
-        <div class="card-header">
-          <span class="section-tag mono">LIVE_REQUEST_LOG</span>
-          <button class="btn btn-primary mono" id="btn-load-test">► RUN 6x LB TEST</button>
-        </div>
-        <div class="terminal-box" id="lb-results">
-          <div class="terminal-line muted mono">$ Waiting for incoming requests...</div>
-        </div>
-      </section>
+      <!-- RIGHT CONTENT -->
+      <div class="right-content">
 
-      <!-- Right: Caching Inspector -->
-      <section class="card cache-card">
-        <div class="card-header">
-          <span class="section-tag mono">HTTP_CACHE_INSPECTOR</span>
-          <button class="btn btn-secondary mono" id="btn-cache-test">► FETCH /api/data</button>
-        </div>
-        <div class="cache-grid">
-          <div class="cache-kv">
-            <span class="kv-key mono">STATUS</span>
-            <span class="kv-val mono cyan" id="cache-status-code">---</span>
+        <!-- Live Log -->
+        <div class="card">
+          <div class="card-header">
+            <span class="section-tag">LIVE_REQUEST_LOG</span>
+            <button class="btn btn-primary" id="btn-load-test">► RUN 6x LB TEST</button>
           </div>
-          <div class="cache-kv">
-            <span class="kv-key mono">CACHE-CONTROL</span>
-            <span class="kv-val mono green" id="cache-header-val">---</span>
-          </div>
-          <div class="cache-kv">
-            <span class="kv-key mono">ETAG</span>
-            <span class="kv-val mono purple" id="cache-etag-val">---</span>
+          <div class="terminal-box" id="lb-results">
+            <div class="terminal-line muted">$ Waiting for incoming requests...</div>
           </div>
         </div>
-        <div class="terminal-box small" id="cache-json-preview">
-          <span class="mono muted">// Response payload will appear here</span>
-        </div>
-      </section>
 
-    </main>
+        <!-- Cache Inspector -->
+        <div class="card">
+          <div class="card-header">
+            <span class="section-tag">HTTP_CACHE_INSPECTOR</span>
+            <button class="btn btn-secondary" id="btn-cache-test">► FETCH /api/data</button>
+          </div>
+          <div class="cache-row">
+            <div class="cache-kv"><span class="kv-key">STATUS</span><span class="kv-val cyan" id="cache-status-code">---</span></div>
+            <div class="cache-kv"><span class="kv-key">CACHE-CONTROL</span><span class="kv-val green" id="cache-header-val">---</span></div>
+            <div class="cache-kv"><span class="kv-key">ETAG</span><span class="kv-val purple" id="cache-etag-val">---</span></div>
+          </div>
+          <div class="terminal-box" id="cache-json-preview">
+            <span class="muted">// Response payload will appear here</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <footer class="footer">
-      <span class="mono muted">CloudPulse NOC v1.0</span>
-      <span class="mono muted sep">|</span>
-      <span class="mono muted">DNS → TCP → TLS 1.3 → Nginx → Round-Robin Upstream</span>
-      <span class="mono muted sep">|</span>
-      <span class="mono muted">Private Subnet · <span id="footer-clock">--:--:--</span></span>
+      <span class="muted">CloudPulse NOC v1.0</span>
+      <span class="sep">|</span>
+      <span class="muted">DNS → TCP → TLS 1.3 → Nginx → Round-Robin Upstream</span>
+      <span class="sep">|</span>
+      <span class="muted">Private Subnet · <span id="footer-clock">--:--:--</span></span>
     </footer>
-  </div>
 
+  </div>
   <script src="app.js"></script>
 </body>
 </html>
