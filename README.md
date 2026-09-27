@@ -10,32 +10,31 @@ CloudPulse is a high-availability, distributed local network service platform si
 
 ---
 
-## 🎨 Network Architecture Topology (Mermaid Diagram)
+## 🎨 Network Architecture Topology (3-Machine Deployment)
 
 ```mermaid
 flowchart TD
     classDef client fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff
-    classDef dns fill:#312e81,stroke:#8b5cf6,stroke-width:2px,color:#fff
-    classDef edge fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff
-    classDef backend fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef gateway fill:#1e1b4b,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    classDef backend1 fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef backend2 fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff
 
-    Client["💻 Client Machine<br/>(Browser / curl)"]:::client
-    
-    subgraph DNS_Layer ["DNS Resolution Layer (Port 53)"]
-        DNS["🌐 Mac 1: Private DNS Server<br/>(dnsmasq :: app.team1.test)"]:::dns
+    subgraph Host3 ["🖥️ Machine 3: Compute Node B & Client (Aditya Pal)"]
+        Client["💻 Client Machine<br/>(Browser / curl / Test Suite)"]:::client
+        BackendB["⚡ Backend Server B<br/>Port 3002 | X-Backend: Server-B"]:::backend2
     end
 
-    subgraph Edge_Layer ["Edge Proxy & Security Layer (Port 443)"]
-        Nginx["🛡️ Mac 2: Nginx Reverse Proxy<br/>& TLS Termination Engine"]:::edge
+    subgraph Host1 ["🛡️ Machine 1: Edge Gateway & DNS (Adnan Rizvi - Lead)"]
+        DNS["🌐 Private DNS Server<br/>(dnsmasq :: Port 53 UDP)"]:::gateway
+        Nginx["🛡️ Nginx Reverse Proxy<br/>TLS 1.3 Termination (Port 443 HTTPS)"]:::gateway
     end
 
-    subgraph Cluster_Layer ["Upstream Load Balanced Microservices"]
-        BackendA["⚡ Mac 3: Backend Node A<br/>Port 3001 | X-Backend: Server-A"]:::backend
-        BackendB["⚡ Mac 4: Backend Node B<br/>Port 3002 | X-Backend: Server-B"]:::backend
+    subgraph Host2 ["⚡ Machine 2: Compute Node A (Praanshu Ranjan)"]
+        BackendA["⚡ Backend Server A<br/>Port 3001 | X-Backend: Server-A"]:::backend1
     end
 
     Client -- "1. DNS Query (app.team1.test)" --> DNS
-    DNS -- "2. Returns Mac 2 IPv4" --> Client
+    DNS -- "2. Returns Machine 1 IP" --> Client
     Client -- "3. HTTPS Request (TLS 1.3 / Port 443)" --> Nginx
     Nginx -- "4. Round-Robin Pass (Port 3001)" --> BackendA
     Nginx -- "4. Alternate Pass (Port 3002)" --> BackendB
@@ -48,33 +47,32 @@ flowchart TD
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Client as Client Machine
-    participant DNS as Mac 1 (dnsmasq)
-    participant Edge as Mac 2 (Nginx Edge)
-    participant NodeA as Mac 3 (Backend A)
-    participant NodeB as Mac 4 (Backend B)
+    actor Client as 💻 Client (Machine 3 - Aditya)
+    participant Gateway as 🛡️ Machine 1: Edge & DNS (Adnan)
+    participant NodeA as ⚡ Machine 2: Backend A (Praanshu)
+    participant NodeB as ⚡ Machine 3: Backend B (Aditya)
 
-    Note over Client, DNS: Step 1: DNS Resolution (UDP 53)
-    Client->>DNS: A-Record Lookup (app.team1.test)
-    DNS-->>Client: Response: 192.168.x.x (Mac 2 IP)
+    Note over Client, Gateway: Step 1: DNS Resolution (UDP 53)
+    Client->>Gateway: A-Record Lookup (app.team1.test)
+    Gateway-->>Client: Response: Machine 1 IPv4 (192.168.x.x)
 
-    Note over Client, Edge: Step 2: Transport & Security (TCP/TLS)
-    Client->>Edge: TCP 3-Way Handshake (SYN ➔ SYN-ACK ➔ ACK)
-    Client->>Edge: TLS ClientHello
-    Edge-->>Client: TLS ServerHello + SSL Certificate (Root CA Signed)
-    Note over Client, Edge: TLS Session Key Encrypted Channel Established
+    Note over Client, Gateway: Step 2: Transport & Security (TCP/TLS)
+    Client->>Gateway: TCP 3-Way Handshake (SYN ➔ SYN-ACK ➔ ACK)
+    Client->>Gateway: TLS ClientHello
+    Gateway-->>Client: TLS ServerHello + SSL Certificate (Root CA Signed)
+    Note over Client, Gateway: TLS 1.3 Encrypted Channel Established
 
     Note over Client, NodeA: Step 3: HTTP Request & Load Balancing
-    Client->>Edge: GET /api/status (Encrypted HTTPS)
-    Edge->>NodeA: Proxy Pass (http://127.0.0.1:3001)
-    NodeA-->>Edge: 200 OK (X-Backend: Server-A)
-    Edge-->>Client: Return Response (Encrypted)
+    Client->>Gateway: GET /api/status (Encrypted HTTPS)
+    Gateway->>NodeA: Proxy Pass (http://Machine2_IP:3001)
+    NodeA-->>Gateway: 200 OK (X-Backend: Server-A)
+    Gateway-->>Client: Return Response (Encrypted)
 
     Note over Client, NodeB: Step 4: Subsequent Request (Round-Robin)
-    Client->>Edge: GET /api/status (Second Request)
-    Edge->>NodeB: Proxy Pass (http://127.0.0.1:3002)
-    NodeB-->>Edge: 200 OK (X-Backend: Server-B)
-    Edge-->>Client: Return Response (Encrypted)
+    Client->>Gateway: GET /api/status (Second Request)
+    Gateway->>NodeB: Proxy Pass (http://Machine3_IP:3002)
+    NodeB-->>Gateway: 200 OK (X-Backend: Server-B)
+    Gateway-->>Client: Return Response (Encrypted)
 ```
 
 ---
