@@ -28,6 +28,23 @@ app.get('/api/status', (req, res) => {
   });
 });
 
+app.get('/api/health', (req, res) => {
+  const memUsage = process.memoryUsage();
+  res.json({
+    status: 'healthy',
+    backendNode: BACKEND_ID,
+    port: PORT,
+    platform: process.platform,
+    nodeVersion: process.version,
+    uptimeSeconds: Math.floor(process.uptime()),
+    memoryMB: {
+      rss: (memUsage.rss / 1024 / 1024).toFixed(2),
+      heapUsed: (memUsage.heapUsed / 1024 / 1024).toFixed(2)
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get('/api/data', (req, res) => {
   res.setHeader('Cache-Control', 'max-age=60, public');
   res.setHeader('ETag', 'W/"cloudpulse-v1-static-hash"');
