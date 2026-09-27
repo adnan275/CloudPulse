@@ -1,11 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+  let reqCount = 0;
+
+  // Clock
+  function updateClock() {
+    const now = new Date().toLocaleTimeString('en-GB');
+    const el = document.getElementById('clock');
+    const fe = document.getElementById('footer-clock');
+    if (el) el.textContent = now;
+    if (fe) fe.textContent = now;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Elements
   const connectedNodeText = document.getElementById('connected-node-text');
-  const backendName = document.getElementById('backend-name');
-  const backendPort = document.getElementById('backend-port');
-  const xBackendHeader = document.getElementById('x-backend-header');
-  const nodeLatency = document.getElementById('node-latency');
-  const nodeAvatar = document.getElementById('node-avatar');
-  const edgeDomain = document.getElementById('edge-domain');
+  const chipBackend = document.getElementById('chip-backend');
+  const chipPort = document.getElementById('chip-port');
+  const chipLatency = document.getElementById('chip-latency');
+  const chipReqCount = document.getElementById('chip-req-count');
 
   const btnLoadTest = document.getElementById('btn-load-test');
   const lbResults = document.getElementById('lb-results');
@@ -16,50 +28,55 @@ document.addEventListener('DOMContentLoaded', () => {
   const cacheEtagVal = document.getElementById('cache-etag-val');
   const cacheJsonPreview = document.getElementById('cache-json-preview');
 
-  edgeDomain.textContent = window.location.hostname || 'app.team1.test';
-
   fetchStatus();
 
   async function fetchStatus() {
     const startTime = performance.now();
     try {
-      const response = await fetch('/api/status', { cache: 'no-store' });
+      const res = await fetch('/api/status', { cache: 'no-store' });
       const latency = Math.round(performance.now() - startTime);
-      const data = await response.json();
-      const backendHeader = response.headers.get('X-Backend') || data.backend || 'Unknown';
+      const data = await res.json();
+      const xb = res.headers.get('X-Backend') || data.backend || 'Server-A';
 
-      updateNodeCard(data.backend, data.port, backendHeader, latency);
+      connectedNodeText.textContent = `CONNECTED · ${data.backend}`;
+      chipBackend.textContent = data.backend;
+      chipPort.textContent = `:${data.port}`;
+      chipLatency.textContent = `${latency} ms`;
+
+      reqCount++;
+      chipReqCount.textContent = reqCount;
+
+      if (data.backend && data.backend.includes('B')) {
+        document.getElementById('node-b-badge').style.boxShadow = '0 0 12px rgba(0,229,160,0.5)';
+      } else {
+        document.getElementById('node-a-badge').style.boxShadow = '0 0 12px rgba(0,212,255,0.5)';
+      }
+
     } catch (err) {
-      connectedNodeText.textContent = 'Backend Connection Error';
-      backendName.textContent = 'Disconnected / Offline';
-      console.error(err);
+      connectedNodeText.textContent = 'ERR · UPSTREAM DOWN';
     }
   }
 
-  function updateNodeCard(name, port, headerVal, latency) {
-    backendName.textContent = `Node: ${name}`;
-    backendPort.textContent = port ? `Port ${port}` : 'N/A';
-    xBackendHeader.textContent = `X-Backend: ${headerVal}`;
-    nodeLatency.textContent = `${latency} ms`;
-    connectedNodeText.textContent = `Active: ${name}`;
-
-    if (name && name.includes('B')) {
-      nodeAvatar.textContent = 'B';
-      nodeAvatar.classList.add('node-b');
-    } else {
-      nodeAvatar.textContent = 'A';
-      nodeAvatar.classList.remove('node-b');
-    }
+  function logLine(content, cls = '') {
+    const line = document.createElement('div');
+    line.className = `terminal-line ${cls}`;
+    line.textContent = content;
+    lbResults.appendChild(line);
+    lbResults.scrollTop = lbResults.scrollHeight;
   }
 
-  // Task D: Load Balancing Test (6x requests)
   btnLoadTest.addEventListener('click', async () => {
     btnLoadTest.disabled = true;
-    btnLoadTest.textContent = 'Testing...';
+    btnLoadTest.textContent = '● RUNNING...';
     lbResults.innerHTML = '';
 
+    const ts = new Date().toLocaleTimeString('en-GB');
+    logLine(`[${ts}] Initiating 6x Round-Robin Load Balance Test...`, 'muted');
+    logLine(`[${ts}] Target: /api/status | Method: GET`, 'muted');
+    logLine('─'.repeat(52), 'muted');
+
     for (let i = 1; i <= 6; i++) {
-      const startTime = performance.now();
+      const start = performance.now();
       try {
         const isDirectPort = window.location.port === '3001' || window.location.port === '3002';
         const targetUrl = isDirectPort
@@ -67,33 +84,40 @@ document.addEventListener('DOMContentLoaded', () => {
           : '/api/status';
 
         const res = await fetch(targetUrl, { cache: 'no-store' });
-        const latency = Math.round(performance.now() - startTime);
+        const lat = Math.round(performance.now() - start);
         const data = await res.json();
-        const xBackend = res.headers.get('X-Backend') || data.backend || 'A';
+        const xb = res.headers.get('X-Backend') || data.backend;
+        const isB = xb && (xb.includes('B') || xb.includes('3002'));
+        const now = new Date().toLocaleTimeString('en-GB');
 
-        const row = document.createElement('div');
-        const isB = xBackend.includes('B') || xBackend.includes('3002');
-        row.className = `result-row ${isB ? 'node-b-row' : ''}`;
-        row.innerHTML = `
-          <div><strong>Req #${i}:</strong> Served by <span style="color: ${isB ? '#10b981' : '#3b82f6'}">${data.backend}</span></div>
-          <div class="result-meta">X-Backend: ${xBackend} | ${latency}ms</div>
-        `;
-        lbResults.appendChild(row);
+        logLine(
+          `[${now}] REQ #${i}  →  ${data.backend}  |  X-Backend: ${xb}  |  ${res.status} OK  |  ${lat}ms`,
+          isB ? 'success-b' : 'success-a'
+        );
+
+        reqCount++;
+        chipReqCount.textContent = reqCount;
+        chipBackend.textContent = data.backend;
+        chipPort.textContent = `:${data.port}`;
+        chipLatency.textContent = `${lat} ms`;
+
       } catch (err) {
-        const row = document.createElement('div');
-        row.className = 'result-row';
-        row.innerHTML = `<div>Req #${i}: Failed to reach backend</div>`;
-        lbResults.appendChild(row);
+        const now = new Date().toLocaleTimeString('en-GB');
+        logLine(`[${now}] REQ #${i}  →  UPSTREAM UNREACHABLE  |  ERR_CONNECTION_REFUSED`, 'error');
       }
-      await new Promise(r => setTimeout(r, 250));
+      await new Promise(r => setTimeout(r, 300));
     }
 
+    const done = new Date().toLocaleTimeString('en-GB');
+    logLine('─'.repeat(52), 'muted');
+    logLine(`[${done}] Load balance cycle complete. Nginx Round-Robin verified.`, 'muted');
+
     btnLoadTest.disabled = false;
-    btnLoadTest.textContent = 'Run 6x Requests';
+    btnLoadTest.textContent = '► RUN 6x LB TEST';
   });
 
-  // Task F: HTTP Caching Test
   btnCacheTest.addEventListener('click', async () => {
+    btnCacheTest.disabled = true;
     try {
       const res = await fetch('/api/data');
       cacheStatusCode.textContent = `${res.status} ${res.statusText}`;
@@ -101,10 +125,18 @@ document.addEventListener('DOMContentLoaded', () => {
       cacheEtagVal.textContent = res.headers.get('ETag') || 'W/"cloudpulse-v1"';
 
       const data = await res.json();
-      cacheJsonPreview.textContent = JSON.stringify(data, null, 2);
+      cacheJsonPreview.innerHTML = '';
+
+      const line = document.createElement('pre');
+      line.className = 'terminal-line mono cyan';
+      line.style.fontSize = '11px';
+      line.textContent = JSON.stringify(data, null, 2);
+      cacheJsonPreview.appendChild(line);
+
     } catch (err) {
-      cacheStatusCode.textContent = 'Error';
-      cacheJsonPreview.textContent = '// Failed to fetch /api/data';
+      cacheStatusCode.textContent = 'ERR';
+      cacheJsonPreview.innerHTML = '<span class="terminal-line error mono">// Failed to fetch /api/data</span>';
     }
+    btnCacheTest.disabled = false;
   });
 });

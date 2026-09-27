@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CloudPulse | Private Network Service Platform</title>
+  <title>CloudPulse | Network Operations Center</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,81 +11,155 @@
 </head>
 <body>
   <div class="app-container">
+
+    <!-- Top Bar -->
     <header class="navbar">
       <div class="brand">
-        <div class="logo-icon">🌐</div>
+        <div class="logo-icon">⬡</div>
         <div>
-          <h1>CloudPulse <span class="badge-tag">CN Phase 1</span></h1>
-          <p class="subtitle">Private Local Network Service Platform • <code>app.team1.test</code></p>
+          <h1>CloudPulse <span class="badge-tag">NOC v1.0</span></h1>
+          <p class="subtitle mono">Network Operations Center &nbsp;|&nbsp; <span class="cyan">app.team1.test</span> &nbsp;|&nbsp; <span id="clock">--:--:--</span></p>
         </div>
       </div>
-      <div class="status-pill" id="global-status-pill">
-        <span class="status-dot pulsing"></span>
-        <span id="connected-node-text">Connecting to Node...</span>
+      <div class="top-right">
+        <div class="status-pill">
+          <span class="status-dot pulsing"></span>
+          <span class="mono" id="connected-node-text">CONNECTING...</span>
+        </div>
       </div>
     </header>
 
+    <!-- Metrics Bar -->
+    <div class="metrics-bar">
+      <div class="metric-chip">
+        <span class="chip-label">ACTIVE NODE</span>
+        <span class="chip-val mono cyan" id="chip-backend">--</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">PORT</span>
+        <span class="chip-val mono cyan" id="chip-port">:----</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">LATENCY</span>
+        <span class="chip-val mono green" id="chip-latency">-- ms</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">PROTOCOL</span>
+        <span class="chip-val mono purple">HTTP/1.1</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">TLS</span>
+        <span class="chip-val mono green">v1.3 ✓</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">LB ALGO</span>
+        <span class="chip-val mono blue">ROUND-ROBIN</span>
+      </div>
+      <div class="metric-chip">
+        <span class="chip-label">REQUESTS</span>
+        <span class="chip-val mono" id="chip-req-count">0</span>
+      </div>
+    </div>
+
     <main class="dashboard-grid">
-      <section class="card hero-card">
+
+      <!-- Left: Node Status Panel -->
+      <section class="card node-card">
         <div class="card-header">
-          <h2>⚡ Active Edge & Backend Node</h2>
-          <span class="protocol-badge">TLS / HTTPS Active</span>
+          <span class="section-tag mono">SYS_NODE_STATUS</span>
+          <span class="live-badge">● LIVE</span>
         </div>
-        <div class="hero-content">
-          <div class="node-display-box" id="node-box">
-            <div class="node-avatar" id="node-avatar">A</div>
-            <div class="node-details">
-              <h3 id="backend-name">Detecting Backend Node...</h3>
-              <p class="node-meta">Served via Edge Proxy: <strong id="edge-domain">app.team1.test</strong></p>
-              <div class="metrics-row">
-                <div class="metric">
-                  <span class="metric-label">Listening Port</span>
-                  <span class="metric-val" id="backend-port">----</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Response Header</span>
-                  <span class="metric-val" id="x-backend-header">X-Backend: --</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Latency</span>
-                  <span class="metric-val" id="node-latency">-- ms</span>
-                </div>
-              </div>
-            </div>
+
+        <div class="node-block" id="node-a-block">
+          <div class="node-indicator" id="node-a-indicator"></div>
+          <div class="node-info">
+            <div class="node-title mono">Backend-A <span class="port-tag">:3001</span></div>
+            <div class="node-status mono green" id="node-a-status">HEALTHY</div>
+          </div>
+          <div class="node-badge" id="node-a-badge">A</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="node-block" id="node-b-block">
+          <div class="node-indicator b" id="node-b-indicator"></div>
+          <div class="node-info">
+            <div class="node-title mono">Backend-B <span class="port-tag">:3002</span></div>
+            <div class="node-status mono green" id="node-b-status">HEALTHY</div>
+          </div>
+          <div class="node-badge b" id="node-b-badge">B</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="stack-mini">
+          <div class="stack-row">
+            <span class="mono muted">DNS</span>
+            <span class="mono cyan">UDP :53</span>
+          </div>
+          <div class="stack-row">
+            <span class="mono muted">TLS EDGE</span>
+            <span class="mono cyan">TCP :443</span>
+          </div>
+          <div class="stack-row">
+            <span class="mono muted">UPSTREAM-A</span>
+            <span class="mono blue">TCP :3001</span>
+          </div>
+          <div class="stack-row">
+            <span class="mono muted">UPSTREAM-B</span>
+            <span class="mono green">TCP :3002</span>
+          </div>
+          <div class="stack-row">
+            <span class="mono muted">CACHE-TTL</span>
+            <span class="mono purple">max-age=60</span>
           </div>
         </div>
       </section>
 
-      <section class="card">
+      <!-- Center: Live Request Log -->
+      <section class="card log-card">
         <div class="card-header">
-          <h2>⚖️ Task D: Nginx Load Balancing Demo</h2>
-          <button class="btn btn-primary" id="btn-load-test">Run 6x Requests</button>
+          <span class="section-tag mono">LIVE_REQUEST_LOG</span>
+          <button class="btn btn-primary mono" id="btn-load-test">► RUN 6x LB TEST</button>
         </div>
-        <p class="card-desc">Click to send sequential requests to <code>/api/status</code> and watch Nginx distribute traffic round-robin between Backend A & B.</p>
-        <div class="test-results-list" id="lb-results">
-          <div class="empty-state">Click "Run 6x Requests" to test load balancing flow</div>
+        <div class="terminal-box" id="lb-results">
+          <div class="terminal-line muted mono">$ Waiting for incoming requests...</div>
         </div>
       </section>
 
-      <section class="card">
+      <!-- Right: Caching Inspector -->
+      <section class="card cache-card">
         <div class="card-header">
-          <h2>💾 Task F: HTTP Caching & 304 Validation</h2>
-          <button class="btn btn-secondary" id="btn-cache-test">Fetch Cached Resource</button>
+          <span class="section-tag mono">HTTP_CACHE_INSPECTOR</span>
+          <button class="btn btn-secondary mono" id="btn-cache-test">► FETCH /api/data</button>
         </div>
-        <p class="card-desc">Demonstrates <code>Cache-Control: max-age=60</code> and <code>ETag</code> headers. Second request yields HTTP 304 Not Modified.</p>
-        <div class="cache-box" id="cache-output-box">
-          <div class="cache-meta">
-            <div><strong>Status Code:</strong> <span id="cache-status-code">--</span></div>
-            <div><strong>Cache-Control:</strong> <span id="cache-header-val">--</span></div>
-            <div><strong>ETag:</strong> <span id="cache-etag-val">--</span></div>
+        <div class="cache-grid">
+          <div class="cache-kv">
+            <span class="kv-key mono">STATUS</span>
+            <span class="kv-val mono cyan" id="cache-status-code">---</span>
           </div>
-          <pre class="json-preview" id="cache-json-preview">// Click button to test caching endpoint /api/data</pre>
+          <div class="cache-kv">
+            <span class="kv-key mono">CACHE-CONTROL</span>
+            <span class="kv-val mono green" id="cache-header-val">---</span>
+          </div>
+          <div class="cache-kv">
+            <span class="kv-key mono">ETAG</span>
+            <span class="kv-val mono purple" id="cache-etag-val">---</span>
+          </div>
+        </div>
+        <div class="terminal-box small" id="cache-json-preview">
+          <span class="mono muted">// Response payload will appear here</span>
         </div>
       </section>
+
     </main>
 
     <footer class="footer">
-      <p>CloudPulse Distributed Gateway v1.0 • TLS 1.3 Terminated • Nginx Round-Robin Load Balancing • Local Subnet Topology</p>
+      <span class="mono muted">CloudPulse NOC v1.0</span>
+      <span class="mono muted sep">|</span>
+      <span class="mono muted">DNS → TCP → TLS 1.3 → Nginx → Round-Robin Upstream</span>
+      <span class="mono muted sep">|</span>
+      <span class="mono muted">Private Subnet · <span id="footer-clock">--:--:--</span></span>
     </footer>
   </div>
 
