@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   edgeDomain.textContent = window.location.hostname || 'app.team1.test';
 
-  // Initial Status Check
   fetchStatus();
 
   async function fetchStatus() {
@@ -62,7 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 1; i <= 6; i++) {
       const startTime = performance.now();
       try {
-        const res = await fetch('/api/status', { cache: 'no-store' });
+        const isDirectPort = window.location.port === '3001' || window.location.port === '3002';
+        const targetUrl = isDirectPort
+          ? `http://${window.location.hostname}:${3001 + ((i - 1) % 2)}/api/status`
+          : '/api/status';
+
+        const res = await fetch(targetUrl, { cache: 'no-store' });
         const latency = Math.round(performance.now() - startTime);
         const data = await res.json();
         const xBackend = res.headers.get('X-Backend') || data.backend || 'A';
@@ -94,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/data');
       cacheStatusCode.textContent = `${res.status} ${res.statusText}`;
       cacheHeaderVal.textContent = res.headers.get('Cache-Control') || 'max-age=60';
-      cacheEtagVal.textContent = res.headers.get('ETag') || 'W/"cn-etag-v1"';
+      cacheEtagVal.textContent = res.headers.get('ETag') || 'W/"cloudpulse-v1"';
 
       const data = await res.json();
       cacheJsonPreview.textContent = JSON.stringify(data, null, 2);
