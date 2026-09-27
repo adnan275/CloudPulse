@@ -42,7 +42,7 @@ flowchart TD
 
 ---
 
-## ⚡ End-to-End Protocol Flow Sequence (Mermaid Diagram)
+## ⚡ End-to-End Protocol Flow Sequence 
 
 ```mermaid
 sequenceDiagram
@@ -140,5 +140,5 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 | :--- | :--- | :--- |
 | **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | System Architecture, NGINX Load Balancing & Edge Security |
 | **Praanshu Ranjan** | [@praanshuranjan](https://github.com/praanshuranjan) | Backend Microservices (Node.js REST API & Routing) |
-| **Aditya Pal**| (`2401020082`) [@garariya](https://github.com/garariya) | DNS Infrastructure, Testing & Performance Automation |
+| **Aditya Pal** (`2401020082`)  |  [@garariya](https://github.com/garariya) | DNS Infrastructure, Testing & Performance Automation |
 
