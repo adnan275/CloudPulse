@@ -84,7 +84,7 @@ sequenceDiagram
 | **Node 1 (Private DNS)** | **Machine 1** (Adnan Rizvi) | `dnsmasq`, `dig`, `nslookup` | `0.0.0.0:53 (UDP/TCP)` | AWS Route 53 / Cloudflare DNS |
 | **Node 2 (Edge Proxy)** | **Machine 1** (Adnan Rizvi) | `Nginx`, TLS 1.3 Termination | `0.0.0.0:443 (HTTPS)`, `80` | AWS Application Load Balancer (ALB) |
 | **Node 3 (Backend A)** | **Machine 2** (Praanshu) | Node.js Express REST API (Server-A) | `0.0.0.0:3001 (HTTP)` | Compute Instance / EC2 A |
-| **Node 4 (Backend B)** | **Machine 3** (Garariya) | Node.js Express REST API (Server-B) | `0.0.0.0:3002 (HTTP)` | Compute Instance / EC2 B |
+| **Node 4 (Backend B)** | **Machine 3** (Aditya Pal) | Node.js Express REST API (Server-B) | `0.0.0.0:3002 (HTTP)` | Compute Instance / EC2 B |
 
 ---
 
@@ -106,7 +106,7 @@ sequenceDiagram
 
 | Protocol Layer | Wireshark Display Filter | Evidence to Highlight |
 | :--- | :--- | :--- |
-| **DNS** | `dns.flags.response == 1` | Resolves `app.team1.test` to Mac 2 IPv4 |
+| **DNS** | `dns.flags.response == 1` | Resolves `app.team1.test` to Machine 1 (Edge) IPv4 |
 | **TCP Handshake** | `tcp.port == 443 && tcp.flags.syn == 1` | 3-way handshake (`SYN` ➔ `SYN-ACK` ➔ `ACK`) |
 | **TLS Handshake** | `tls.handshake.type == 1` | `ClientHello`, `ServerHello`, Certificate validation |
 | **HTTP Payload** | `http || tls` | Request headers & `X-Backend` header distribution |
