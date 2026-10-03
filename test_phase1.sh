@@ -1,14 +1,30 @@
 #!/bin/bash
-set -e
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$PROJECT_DIR"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 RED='\033[0;31m'
+YELLOW='\033[0;33m'
 NC='\033[0m'
 
 echo -e "${BLUE}==========================================================${NC}"
 echo -e "${BLUE}Running Phase 1 Automated Network & API Tests${NC}"
 echo -e "${BLUE}==========================================================${NC}"
+
+# Ensure Backend A is running
+if ! lsof -i :3001 >/dev/null 2>&1; then
+  echo -e "${YELLOW}⚡ Starting Backend A on port 3001...${NC}"
+  node backend-a/server.js >/dev/null 2>&1 &
+  sleep 1
+fi
+
+# Ensure Backend B is running
+if ! lsof -i :3002 >/dev/null 2>&1; then
+  echo -e "${YELLOW}⚡ Starting Backend B on port 3002...${NC}"
+  node backend-b/server.js >/dev/null 2>&1 &
+  sleep 1
+fi
 
 echo -n "Checking Backend A (Port 3001)... "
 RESP_A=$(curl -s http://127.0.0.1:3001/api/status || echo "")
