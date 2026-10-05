@@ -9,7 +9,7 @@
 | Team Member | Physical Machine | Logical Network Role(s) | Services Managed | Interfaces & Assigned Ports |
 | :--- | :--- | :--- | :--- | :--- |
 | **Adnan Rizvi (2401010043)** (Lead) | **Machine 1** | Node 1 (Private DNS) + Node 2 (Edge TLS Proxy) | `dnsmasq`, `Nginx` (TLS 1.3 Termination), System Architecture | `Port 53 (UDP)` & `Port 443 (HTTPS)` |
-| **Praanshu Ranjan** | **Machine 2** | Node 3 (Upstream Backend A) | Node.js Express REST API (Server-A) | `Port 3001 (HTTP)` |
+| **Praanshu Ranjan (2401010329)** | **Machine 2** | Node 3 (Upstream Backend A) | Node.js Express REST API (Server-A) | `Port 3001 (HTTP)` |
 | **Aditya Pal (2401020082)** | **Machine 3** | Node 4 (Upstream Backend B) & Test Client | Node.js Express REST API (Server-B), `curl` | `Port 3002 (HTTP)` |
 
 ---
