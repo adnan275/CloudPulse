@@ -139,7 +139,7 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 
 | Contributor | GitHub Profile | Project Responsibilities |
 | :--- | :--- | :--- |
-| **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | **Team Lead** — System Architecture, NGINX Load Balancing & Edge Security |
-| **Praanshu Ranjan** (`2401010329`) | [@praanshuranjan](https://github.com/praanshuranjan) | Backend Microservices (Node.js REST API & Routing) |
-| **Aditya Pal** (`2401020082`)  |  [@garariya](https://github.com/garariya) | DNS Infrastructure, Testing & Performance Automation |
+| **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | **Team Lead & Principal Architect** — Distributed LAN Topology Design, Edge Reverse Proxying, TLS 1.3 Cryptographic Termination & High-Availability Load Balancing |
+| **Praanshu Ranjan** (`2401010329`) | [@praanshuranjan](https://github.com/praanshuranjan) | **Distributed Backend Engineer** — RESTful Microservices Orchestration, Node.js Express Application Routing, Upstream Server-A Isolation & Health Check Telemetry |
+| **Aditya Pal** (`2401020082`)  |  [@garariya](https://github.com/garariya) | **Network & DevOps Engineer** — Authoritative Private DNS Zone Provisioning, Upstream Server-B Deployment, HTTP Caching & Automated Protocol Verification |
 
