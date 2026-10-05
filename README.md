@@ -139,7 +139,7 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 
 | Contributor | GitHub Profile | Project Responsibilities |
 | :--- | :--- | :--- |
-| **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | **Team Lead & Network Architect** — Private LAN Architecture, NGINX Edge Reverse Proxy, TLS 1.3 Termination (Port 443) & Round-Robin Load Balancing |
+| **Adnan Rizvi** (`2401010043`) | [@adnan275](https://github.com/adnan275) | **Team Lead & Principal Infrastructure Architect** — End-to-End Private LAN Topology, NGINX Edge Reverse Proxy Pipeline, TLS 1.3 Cryptographic PKI Chain & Layer 7 Round-Robin Load Balancing Engine |
 | **Praanshu Ranjan** (`2401010329`) | [@praanshuranjan](https://github.com/praanshuranjan) | **Backend Systems Engineer** — Upstream Microservice A (Node.js Port 3001), REST API Routing, `X-Backend` Header Injection & Failover Handling |
 | **Aditya Pal** (`2401020082`)  |  [@garariya](https://github.com/garariya) | **DNS & Protocol Engineer** — Authoritative Private DNS (`dnsmasq` Port 53), Upstream Microservice B (Port 3002), HTTP 304 Caching & Wireshark Packet Analysis |
 
