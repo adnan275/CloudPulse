@@ -130,8 +130,8 @@ cd backend-a && npm install && cd ../backend-b && npm install && cd ..
 
 ## 📄 Documentation & Reports
 
-- 📘 [Phase 1 Architecture Specifications](docs/ARCHITECTURE_PHASE1.md)
-- 📋 [Phase 1 Comprehensive Project Report](docs/PROJECT_REPORT_PHASE1.md)
+- 📘 [System Architecture Specifications](docs/ARCHITECTURE_PHASE1.md)
+- 📋 [Comprehensive Project Report](docs/PROJECT_REPORT.md)
 - 📡 [Task G: Wireshark Packet Evidence & Protocol Analysis](docs/WIRESHARK_EVIDENCE.md)
 
 ---
