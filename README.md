@@ -5,6 +5,10 @@
 ![Protocols](https://img.shields.io/badge/Protocols-DNS%20%7C%20TCP%20%7C%20TLS%20%7C%20HTTP%2F1.1-3b82f6?style=for-the-badge&logo=nginx)
 ![Security](https://img.shields.io/badge/Security-TLS_1.3_Termination-10b981?style=for-the-badge&logo=letsencrypt)
 ![Load Balancer](https://img.shields.io/badge/Load_Balancer-Nginx_Round--Robin-8b5cf6?style=for-the-badge&logo=nginx)
+[![Live Deployment](https://img.shields.io/badge/Live_Cloud_Demo-cloudpulse--hba3.onrender.com-00e5a0?style=for-the-badge&logo=render&logoColor=white)](https://cloudpulse-hba3.onrender.com/)
+
+> 🚀 **Live Interactive Dashboard:** [https://cloudpulse-hba3.onrender.com/](https://cloudpulse-hba3.onrender.com/)  
+> Access the live NOC Terminal Dashboard directly online to test Round-Robin load balancing and HTTP 304 caching telemetry.
 
 CloudPulse is a high-availability, distributed local network service platform simulating enterprise cloud infrastructure across a private local area network (LAN). It demonstrates full packet traversal, private DNS resolution, edge reverse proxying, TLS termination, round-robin load balancing, and HTTP caching.
 

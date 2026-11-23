@@ -10,6 +10,7 @@
 - **Infrastructure Category:** Type 2 — 3 Physical Machines with Consolidated Gateway Roles
 - **Target Domain:** `app.team1.test` / `api.team1.test`
 - **Subnet Configuration:** `192.168.1.0/24` (Private Local Area Network)
+- **Live Cloud Deployment:** [https://cloudpulse-hba3.onrender.com/](https://cloudpulse-hba3.onrender.com/)
 - **Repository:** [https://github.com/adnan275/CloudPulse](https://github.com/adnan275/CloudPulse)
 
 ### Team Contributors & Role Matrix
