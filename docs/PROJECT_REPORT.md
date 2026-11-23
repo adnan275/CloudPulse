@@ -39,26 +39,74 @@ The design emphasizes high availability, zero-downtime failover, client isolatio
 
 The project maps four logical network tiers across three physical macOS machines:
 
+```mermaid
+flowchart TD
+    classDef client fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff
+    classDef gateway fill:#1e1b4b,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    classDef backend1 fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef backend2 fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff
+
+    subgraph Host3 ["Machine 3: Compute Node B & Client (Aditya Pal - 192.168.1.52)"]
+        Client["Client Test Suite<br/>(Browser / curl / Test Automation)"]:::client
+        BackendB["Upstream Microservice B<br/>Port 3002 | X-Backend: Server-B"]:::backend2
+    end
+
+    subgraph Host1 ["Machine 1: Gateway & Security Hub (Adnan Rizvi - 192.168.1.50)"]
+        DNS["Private Authoritative DNS<br/>dnsmasq (Port 53 UDP/TCP)"]:::gateway
+        Nginx["NGINX Edge Reverse Proxy<br/>TLS 1.3 Engine (Port 443 HTTPS)"]:::gateway
+    end
+
+    subgraph Host2 ["Machine 2: Compute Node A (Praanshu Ranjan - 192.168.1.51)"]
+        BackendA["Upstream Microservice A<br/>Port 3001 | X-Backend: Server-A"]:::backend1
+    end
+
+    Client -- "1. DNS Query (app.team1.test)" --> DNS
+    DNS -- "2. Returns Machine 1 IP (192.168.1.50)" --> Client
+    Client -- "3. HTTPS Request (TLS 1.3 / Port 443)" --> Nginx
+    Nginx -- "4a. Round-Robin Pass (Port 3001)" --> BackendA
+    Nginx -- "4b. Alternate Pass (Port 3002)" --> BackendB
+    BackendA -. "5a. 200 OK (X-Backend: Server-A)" .-> Nginx
+    BackendB -. "5b. 200 OK (X-Backend: Server-B)" .-> Nginx
+    Nginx -. "6. Encrypted TLS Response" .-> Client
 ```
-                                [ Client Machine ]
-                     (Browser / curl / Test Automation Suite)
-                                        │
-             ┌──────────────────────────┴──────────────────────────┐
-             │                                                     │
-             ▼                                                     ▼
-  [ Node 1: Private DNS ]                               [ Node 2: Edge Proxy ]
-    Machine 1 (Port 53)                                  Machine 1 (Port 443)
-  dnsmasq (app.team1.test)                              NGINX TLS Termination
-             │                                                     │
-             └──────────────────────────┬──────────────────────────┘
-                                        │
-                       (Layer 7 Round-Robin Load Balancer)
-                                        │
-                        ┌───────────────┴───────────────┐
-                        ▼                               ▼
-             [ Node 3: Backend A ]            [ Node 4: Backend B ]
-              Machine 2 (Port 3001)            Machine 3 (Port 3002)
-              X-Backend: Server-A              X-Backend: Server-B
+
+### End-to-End Protocol Flow Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Client Machine (Aditya - 192.168.1.52)
+    participant Gateway as Edge Gateway (Adnan - 192.168.1.50)
+    participant NodeA as Backend A (Praanshu - 192.168.1.51:3001)
+    participant NodeB as Backend B (Aditya - 192.168.1.52:3002)
+
+    Note over Client, Gateway: Phase 1: DNS Resolution (UDP Port 53)
+    Client->>Gateway: A-Record Query (app.team1.test)
+    Gateway-->>Client: DNS Answer: 192.168.1.50 (Authoritative)
+
+    Note over Client, Gateway: Phase 2: Transport & Security Handshake
+    Client->>Gateway: TCP SYN (Port 443)
+    Gateway-->>Client: TCP SYN-ACK
+    Client->>Gateway: TCP ACK (Connection Established)
+    Client->>Gateway: TLS 1.3 ClientHello (Cipher Suites Offered)
+    Gateway-->>Client: TLS 1.3 ServerHello + SSL Certificate (Root CA Signed)
+    Note over Client, Gateway: Symmetric TLS Session Key Established
+
+    Note over Client, NodeA: Phase 3: Application Request (Round-Robin Turn 1)
+    Client->>Gateway: GET /api/status (Encrypted HTTPS)
+    Gateway->>NodeA: Proxy Pass (http://192.168.1.51:3001)
+    NodeA-->>Gateway: HTTP 200 OK (X-Backend: Server-A)
+    Gateway-->>Client: Encrypted HTTP Response (Server-A)
+
+    Note over Client, NodeB: Phase 4: Subsequent Request (Round-Robin Turn 2)
+    Client->>Gateway: GET /api/status (Encrypted HTTPS)
+    Gateway->>NodeB: Proxy Pass (http://192.168.1.52:3002)
+    NodeB-->>Gateway: HTTP 200 OK (X-Backend: Server-B)
+    Gateway-->>Client: Encrypted HTTP Response (Server-B)
+
+    Note over Client, Gateway: Phase 5: Caching & Revalidation
+    Client->>Gateway: GET /api/data (If-None-Match: "cloudpulse-v1-static-hash")
+    Gateway-->>Client: HTTP 304 Not Modified (Zero Payload Transfer)
 ```
 
 ### Host & Port Allocation Table
@@ -163,6 +211,30 @@ All Core Application & API Contracts Verified!
 ---
 
 ## 6. Failure Injection & Resilience Analysis
+
+```mermaid
+flowchart LR
+    classDef normal fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef failure fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff
+    classDef proxy fill:#1e1b4b,stroke:#8b5cf6,stroke-width:2px,color:#fff
+
+    subgraph State1 ["Normal State"]
+        P1["NGINX Proxy"]:::proxy -->|50% Load| A1["Backend A :3001"]:::normal
+        P1 -->|50% Load| B1["Backend B :3002"]:::normal
+    end
+
+    subgraph State2 ["Node A Failure (kill -9)"]
+        P2["NGINX Proxy"]:::proxy -.->|Socket Terminated| A2["Backend A (DOWN)"]:::failure
+        P2 -->|100% Traffic Diverted| B2["Backend B :3002 (HEALTHY)"]:::normal
+    end
+
+    subgraph State3 ["Recovery (./start_all.sh)"]
+        P3["NGINX Proxy"]:::proxy -->|Rotation Restored| A3["Backend A (RECOVERED)"]:::normal
+        P3 -->|Rotation Restored| B3["Backend B :3002"]:::normal
+    end
+
+    State1 ==> State2 ==> State3
+```
 
 - **Fault Injected:** Unscheduled termination of Backend Node A process on Port 3001 (`kill -9`).
 - **Observed Behavior:** Subsequent client requests to `https://app.team1.test/api/status` experienced zero dropped packets. NGINX passively isolated Node A and routed 100% of incoming requests to Backend Node B (`X-Backend: Server-B`).
